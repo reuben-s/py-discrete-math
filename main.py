@@ -1,13 +1,16 @@
 import pygame
 import sys
 import random
+import math
 
 from Node import Node
 from Edge import Edge
-from constants import WIDTH, HEIGHT, BLACK, DOUBLE_CLICK_TIME
+from constants import WIDTH, HEIGHT, BLACK, WHITE, DOUBLE_CLICK_TIME
+from util import point_to_line_distance, midpoint
 
 # Initialize Pygame
 pygame.init()
+font = pygame.font.Font(None, 18)
 
 # Set up the screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -30,8 +33,6 @@ while running:
 
     # Handle events
     for event in pygame.event.get():
-        print(len(edges))
-
         if event.type == pygame.QUIT:
             running = False
 
@@ -42,16 +43,30 @@ while running:
             for x, edge in enumerate(edges):
                 if edge.u is None or edge.v is None:
                     continue
-                # Calculate distance from mouse position to the line
-                distance = abs((edge.u.pos[1] - edge.v.pos[1]) * mouse_pos[0] -
-                        (edge.u.pos[0] - edge.v.pos[0]) * mouse_pos[1] +
-                        edge.u.pos[0] * edge.v.pos[1] - edge.u.pos[1] * edge.v.pos[0]) / \
-                    ((edge.u.pos[1] - edge.v.pos[1])**2 + (edge.u.pos[0] - edge.v.pos[0])**2)**0.5
 
-                # Check if distance is within a threshold (5px). If it is, delete edge.
-                if distance <= 5:
-                    print("Edge clicked")
-                    #edges.pop(x)
+                # Calculate the length of the line segment
+                line_length = math.hypot(edge.v.pos[0] - edge.u.pos[0], edge.v.pos[1] - edge.u.pos[1])
+                
+                # Calculate the midpoint of the line segment
+                mid_point = midpoint(edge.u.pos, edge.v.pos)
+                
+                range_width = line_length - 20 # 10px clearance either side of line
+
+                # Calculate the distance from the click position to the line itself
+                distance_to_line = point_to_line_distance(mouse_pos, edge.u.pos, edge.v.pos)
+
+                # Check if the click position falls within the range around the midpoint
+                # and if the distance to the line is within a reasonable threshold
+                if (mid_point[0] - range_width / 2 <= mouse_pos[0] <= mid_point[0] + range_width / 2) and \
+                (mid_point[1] - range_width / 2 <= mouse_pos[1] <= mid_point[1] + range_width / 2) and \
+                (distance_to_line <= 10):  # Adjust this threshold as needed
+                    if event.button == 3: # Delete edge if it was right clicked
+                        edges.pop(x)
+                    elif event.button == 1: # Prompt for length weight otherwise
+                        pass
+                else:
+                    pass
+
 
             # Check if the mouse click is within any node
             for x, node in enumerate(nodes):
@@ -66,14 +81,14 @@ while running:
                         current_node = x
 
                         if drawing_edge:
-                            edges[len(edges) - 1].v = nodes[current_node]
-                            drawing_edge = False
+                            if current_node != last_clicked_node:
+                                edges[len(edges) - 1].v = nodes[current_node]
+                                drawing_edge = False
                             break
 
                         # If node was double clicked, create a new edge.
                         current_time = pygame.time.get_ticks()
-                        if (current_time - last_click_time < DOUBLE_CLICK_TIME) and (last_clicked_node == current_node):  
-                            print(f"Double click = TRUE")
+                        if (current_time - last_click_time < DOUBLE_CLICK_TIME) and (last_clicked_node == current_node):
                             edges.append(Edge(node))
                             drawing_edge = True
                         else: # If it was not a double click, the user wanted to drag the node
@@ -107,6 +122,22 @@ while running:
     for edge in edges:
         if edge.u is None or edge.v is None:
             continue
+        
+        # Calculate the midpoint of the edge
+        text_pos = ((edge.u.pos[0] + edge.v.pos[0]) // 2, (edge.u.pos[1] + edge.v.pos[1]) // 2)
+        text_pos = (text_pos[0], text_pos[1] - 30)  # Move text above edge to display it more clearly
+        
+        # Render the text
+        text_surface = font.render(edge.get_weight(), True, WHITE)
+        
+        # Get the rectangle of the text surface
+        text_rect = text_surface.get_rect()
+        text_rect.topleft = text_pos
+        
+        # Blit the text onto the screen
+        screen.blit(text_surface, text_rect)
+        
+        # Draw the edge line
         pygame.draw.line(screen, (255, 255, 255), edge.u.pos, edge.v.pos, 3)
 
     # Update the display
