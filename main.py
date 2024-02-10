@@ -2,9 +2,7 @@ from Engine import Engine
 from Node import Node
 from Edge import Edge
 from Text import Text
-from settings import (
-    Button
-    ) 
+from settings import ( Button ) 
 
 engine = Engine()
 engine.set_window_title("Python Discrete Math")
@@ -18,30 +16,30 @@ def calculate_edges(text):
 
 
 def edge_update(edge):
-    if not edge.clicked:
+    if not edge.mouse.clicked:
         return 
 
     # Delete edge if it was right clicked
-    match edge.button:
+    match edge.mouse.button:
         case Button.LEFT_CLICK:
             pass
         case Button.RIGHT_CLICK:
             edge.delete()
 
 def node_update(node):
-    if node.holding:
+    if node.mouse.holding:
         node.pos = engine.get_mouse_pos()
 
-    if not node.clicked:
+    if not node.mouse.clicked:
         return
 
     # If it is a double click then generate new edge
-    if node.double_click and node.engine.cache["pending_node"] is None:
+    if node.mouse.double_click and node.engine.cache["pending_node"] is None:
         node.engine.cache["pending_node"] = node
         return
 
     # Otherwise connect edge or delete node if it is not a double click
-    match node.button:
+    match node.mouse.button:
         case Button.LEFT_CLICK:
             if node.engine.cache["pending_node"] is not None:
                 if node.engine.cache["pending_node"] == node:

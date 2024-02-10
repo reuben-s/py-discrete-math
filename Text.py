@@ -1,12 +1,9 @@
 # Text extends Entity
 
 import pygame
-from pygame import gfxdraw
 
 from Entity import Entity
-from settings import (
-    WHITE
-)
+from settings import ( WHITE )
 
 class Text(Entity):
     def __init__(self, text, pos=(0,0), colour=WHITE, font=None, font_size=18, update=None):

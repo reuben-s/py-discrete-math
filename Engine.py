@@ -1,5 +1,10 @@
 import pygame
-from settings import WIDTH, HEIGHT, FPS, BLACK, Button
+from settings import (
+    WIDTH, 
+    HEIGHT, 
+    FPS, 
+    BLACK
+    )
 
 class Engine:
     def __init__(
@@ -52,19 +57,8 @@ class Engine:
     def handle_mouse_down(self, event):
         # Handle mouse button down event
         for i, entity in enumerate(self._entities):
-            if entity._is_clicked():
+            if entity.mouse.down(event.button):
                 self._clicked_entity_index = i
-
-                if event.button == Button.LEFT_CLICK.value:
-                    entity.button = Button.LEFT_CLICK
-                elif event.button == Button.RIGHT_CLICK.value:
-                    entity.button = Button.RIGHT_CLICK
-
-                if not entity.mousedown:
-                    entity._last_clicked_time = pygame.time.get_ticks()
-
-                entity.mousedown = True
-
                 break
         else:
             self.clicked = True
@@ -72,13 +66,7 @@ class Engine:
     def handle_mouse_up(self, event):
         # Handle mouse button up event
         if self._clicked_entity_index != -1:
-            if self._entities[self._clicked_entity_index]._is_clicked():
-                self._entities[self._clicked_entity_index].clicked = True if not self._entities[self._clicked_entity_index].holding else False
-
-            self._entities[self._clicked_entity_index].mousedown = False
-            self._entities[self._clicked_entity_index]._last_clicked_time = None
-            self._entities[self._clicked_entity_index]._last_mouse_up_time = pygame.time.get_ticks()
-            self._entities[self._clicked_entity_index].holding = False
+            self._entities[self._clicked_entity_index].mouse.up()
             self._clicked_entity_index = -1
 
     def update_entities(self):

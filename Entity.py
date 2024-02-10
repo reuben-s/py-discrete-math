@@ -1,6 +1,7 @@
 # Entity class represents an object within the game
 
 from settings import RED
+from MouseManager import MouseManager
 
 class Entity:
     def __init__(self, pos=None, colour=RED, update=None):
@@ -9,6 +10,8 @@ class Entity:
         self.colour = colour
         self.update = update
         
+        self.mouse = MouseManager(self._is_clicked)
+
         self._delete = False
 
     def delete(self):
