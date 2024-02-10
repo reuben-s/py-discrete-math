@@ -1,14 +1,24 @@
 from Engine import Engine
 from Node import Node
 
-from settings import (WHITE, RED)
+from settings import (WHITE, RED, Button)
 
 engine = Engine()
 engine.set_window_title("Python Discrete Math")
 
 def node_update(node):
-    if (node.clicked):
-        node.colour = WHITE if node.colour == RED else RED
+    if node.holding:
+        node.pos = engine.get_mouse_pos()
+
+    if not node.clicked:
+        return
+    
+    match node.button:
+        case Button.LEFT_CLICK:
+            node.colour = WHITE if node.colour == RED else RED
+        case Button.RIGHT_CLICK:
+            node.delete()
+            print(node._delete)
 
 def program(window):
     if window.clicked:

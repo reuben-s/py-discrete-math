@@ -7,3 +7,8 @@ class Entity:
         self._window = window
         self.pos = pos
         self.colour = colour
+        
+        self._delete = False
+
+    def delete(self):
+        self._delete = True
