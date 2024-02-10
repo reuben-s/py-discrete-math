@@ -14,10 +14,10 @@ class Entity:
     def delete(self):
         self._delete = True
 
-    # Classes which extend Entity must implement these methods
-
     def _is_clicked(self):
-        pass
+        return False
+
+    # Classes which extend Entity must implement these methods
 
     def draw(self):
         pass
