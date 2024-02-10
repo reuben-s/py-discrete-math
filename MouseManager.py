@@ -27,7 +27,6 @@ class MouseManager:
             if current_time - self._last_clicked_time > HOLDING_TIME:
                 self.holding = True
             elif current_time - self._last_mouse_up_time < DOUBLE_CLICK_TIME:
-                print("Double click")
                 self.double_click = True
 
     def _reset(self):
