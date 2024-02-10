@@ -140,11 +140,11 @@ while running:
         # Draw the edge line
         pygame.draw.line(screen, (255, 255, 255), edge.u.pos, edge.v.pos, 3)
 
-    # Update the display
-    pygame.display.flip()
+        # Update the display
+        pygame.display.flip()
 
-    # Cap the frame rate
-    pygame.time.Clock().tick(60)
+        # Cap the frame rate
+        pygame.time.Clock().tick(60)
 
 # Quit Pygame
 pygame.quit()
