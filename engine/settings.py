@@ -4,9 +4,9 @@ class Button(Enum):
     LEFT_CLICK  = 1
     RIGHT_CLICK = 3
 
-# Mouse holding time
-# This is the number of milliseconds the mouse has to be held down for the program to detect that an entity has the mouse held over it
-HOLDING_TIME = 100 # Default : 50ms
+# Mouse timings
+HOLDING_TIME = 100 # This is the number of milliseconds the mouse has to be held down for the program to detect that an entity has the mouse held over it
+DOUBLE_CLICK_TIME = 250 # The interval between two clicks for the click to be counted as a double click
 
 # Default screen dimensions
 WIDTH, HEIGHT = 800, 600

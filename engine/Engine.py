@@ -11,9 +11,11 @@ class Engine:
         pygame.init()
         self._screen = pygame.display.set_mode((width, height))
         self.bg_colour = bg_colour
-        self._running = True
-
         self.clicked = False
+        
+        self.cache = {}
+
+        self._running = True
         self._clicked_entity_index = -1
         self._entities = []
     
@@ -75,6 +77,7 @@ class Engine:
 
             self._entities[self._clicked_entity_index].mousedown = False
             self._entities[self._clicked_entity_index]._last_clicked_time = None
+            self._entities[self._clicked_entity_index]._last_mouse_up_time = pygame.time.get_ticks()
             self._entities[self._clicked_entity_index].holding = False
             self._clicked_entity_index = -1
 
@@ -97,4 +100,5 @@ class Engine:
         return pygame.mouse.get_pos()
 
     def new(self, entity):
+        entity.engine = self
         self._entities.append(entity)
