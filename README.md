@@ -9,7 +9,7 @@ Application which allows you to model discrete math problems.
 
 <br>
 
-<img src="https://github.com/reuben-s/py-discrete-math/assets/111194792/61eac9da-b5f9-492a-a898-5665d050e64c" width="550px">
+<img src="https://github.com/reuben-s/py-discrete-math/assets/111194792/61eac9da-b5f9-492a-a898-5665d050e64c" width="750px">
 
 ## Requirements
 ```
