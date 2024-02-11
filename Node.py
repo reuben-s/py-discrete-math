@@ -36,13 +36,3 @@ class Node(Entity):
 
     def _reset(self):
         self.mouse._reset()
-
-    def delete(self):
-        self._delete = True
-        # Remove all edges connected to node
-        entities_copy = self.engine._entities[:]
-        for entity in filter(lambda entity: type(entity) == Edge, entities_copy):
-            if entity.u == self or entity.v == self:
-                self.engine._entities.remove(entity)
-        # Reset cache
-        self.engine.cache["pending_node"] = None

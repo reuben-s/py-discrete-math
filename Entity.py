@@ -9,6 +9,7 @@ class Entity:
         self.pos = pos
         self.colour = colour
         self.update = update
+        self.focused = False
         
         self.mouse = MouseManager(self._is_clicked)
 
@@ -19,6 +20,9 @@ class Entity:
 
     def _is_clicked(self):
         return False
+
+    def _recieve_keypress(self, event):
+        return
 
     # Classes which extend Entity must implement these methods
 

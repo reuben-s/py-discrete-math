@@ -4,13 +4,19 @@ import math
 import pygame
 
 from Entity import Entity
-from settings import ( WHITE )
+from settings import ( 
+    WHITE,
+    EDGE_WIDTH,
+    EDGE_WEIGHT_OFFSET,
+    EDGE_CLICK_ZONE
+    )
 
 class Edge(Entity):
-    def __init__(self, u, v, colour=WHITE, update=None):
+    def __init__(self, u, v, colour=WHITE, update=None, weight=math.inf):
         super().__init__(colour=colour, update=update)
         self.u = u # Start node
         self.v = v # End node
+        self.weight = weight
 
         self.mouse.is_clicked = self._is_clicked
 
@@ -23,7 +29,7 @@ class Edge(Entity):
         # Calculate the midpoint of the line segment
         mid_point = self.__midpoint(self.u.pos, self.v.pos)
                 
-        range_width = line_length - 20 # 10px clearance either side of line
+        range_width = line_length - (EDGE_CLICK_ZONE * 2)
 
         # Calculate the distance from the click position to the line itself
         distance_to_line = self.__point_to_line_distance(mouse_pos, self.u.pos, self.v.pos)
@@ -37,7 +43,28 @@ class Edge(Entity):
         return False
 
     def draw(self):
-        pygame.draw.line(self.engine._screen, self.colour, self.u.pos, self.v.pos, 2)
+        if self.weight is not math.inf:
+            # Calculate midpoint of the edge
+            midpoint = self.__midpoint(self.v.pos, self.u.pos)
+
+            # Calculate angle of the edge
+            angle = math.atan2(self.v.pos[1] - self.u.pos[1], self.v.pos[0] - self.u.pos[0])
+
+            # Calculate offset from the midpoint perpendicular to the edge
+            offset_x = EDGE_WEIGHT_OFFSET * math.sin(angle)
+            offset_y = -EDGE_WEIGHT_OFFSET * math.cos(angle)
+
+            # Calculate endpoint for the perpendicular line
+            perp_endpoint = (int(midpoint[0] + offset_x), int(midpoint[1] + offset_y))
+
+            # Draw the text
+            text = str(self.weight)
+            font = pygame.font.SysFont(None, 20)
+            text_surface = font.render(text, True, self.colour)
+            self.engine._screen.blit(text_surface, perp_endpoint)
+
+        # Draw the main line
+        pygame.draw.line(self.engine._screen, self.colour, self.u.pos, self.v.pos, EDGE_WIDTH)
 
     # Method to calculate the distance between a point and a line segment
     def __point_to_line_distance(self, point, line_start, line_end):
