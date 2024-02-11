@@ -5,7 +5,7 @@ Application which allows you to model discrete math problems.
 - Left click to add a node. 
 - Double click a node and then click another node to add an edge. 
 - Right click to remove an edge or a node.
-- Click an edge to add a weight to the edge.
+- Left click an edge to assign a weight to an edge.
 
 <br>
 
